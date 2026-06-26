@@ -56,6 +56,65 @@ db.connect((err) => {
         return;
     }
     console.log('Connected to MySQL Database successfully!');
+
+    // ၁။ Users Table ဆောက်ရန် Query (Backtick ခံရပါမယ်)
+    const createUsersTable = `
+        CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(255) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            balance DECIMAL(10, 2) DEFAULT 0.00,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    `;
+
+    // ၂။ Wallet History Table ဆောက်ရန် Query (Backtick ခံရပါမယ်)
+    const createHistoryTable = `
+        CREATE TABLE IF NOT EXISTS wallet_history (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            type ENUM('income', 'outcome') NOT NULL,
+            amount DECIMAL(10, 2) NOT NULL,
+            description TEXT,                                
+            date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        );
+    `;
+
+    // Users Table ကို အရင်ဆောက်ခြင်း
+    db.query(createUsersTable, (err, result) => {
+        if (err) {
+            console.error('Error creating users table:', err);
+            return;
+        }
+        console.log('Users table checked/created successfully!');
+
+        // Users table ပြီးမှ Foreign Key ချိတ်ထားတဲ့ Wallet History Table ကို ဆက်ဆောက်ခြင်း
+        db.query(createHistoryTable, (err, result) => {
+            if (err) {
+                console.error('Error creating wallet_history table:', err);
+            } else {
+                console.log('Wallet history table checked/created successfully!');
+            }
+        });
+    });
+    // Users Table ကို အရင်ဆောက်ခြင်း
+    db.query(createUsersTable, (err, result) => {
+        if (err) {
+            console.error('Error creating users table:', err);
+            return;
+        }
+        console.log('Users table checked/created successfully!');
+
+        // Users table ပြီးမှ Foreign Key ချိတ်ထားတဲ့ Wallet History Table ကို ဆက်ဆောက်ခြင်း
+        db.query(createHistoryTable, (err, result) => {
+            if (err) {
+                console.error('Error creating wallet_history table:', err);
+            } else {
+                console.log('Wallet history table checked/created successfully!');
+            }
+        });
+    });
 });
 
 
