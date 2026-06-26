@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | YeSyn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* 💡 မူရင်းဒီဇိုင်းအတိုင်း အရောင်နှင့် Font စတိုင်လ်များ ညှိယူခြင်း */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            /* မူရင်းနောက်ခံအတိုင်း မှိုင်းညို့သောအစိမ်းရောင် Radial Gradient Pattern */
+            background: radial-gradient(circle at center, #233921 0%, #131c12 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .res {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        /* 💡 မူရင်းပုံပါ တောက်ပသော Linear အစိမ်းရောင်ဘောင်လိုင်းပါဝင်သည့် Glass Card */
+        .login-card {
+            background: linear-gradient(145deg, rgba(22, 33, 21, 0.9) 0%, rgba(13, 20, 13, 0.95) 100%);
+            border: 2px solid #528c37; /* တောက်ပသော အစိမ်းရောင် ဘောင်လိုင်း */
+            padding: 45px 35px;
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            text-align: center;
+        }
+
+        /* Logo Area အလှဆင်ခြင်း */
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .logo-area img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+        }
+
+        .logo-area h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        /* Header Texts */
+        .welcome-title {
+            font-size: 1.55rem;
+            color: #ffffff;
+            font-weight: normal;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 1.45rem;
+            color: #ffffff;
+            font-weight: normal;
+            margin-bottom: 35px;
+        }
+
+        /* Form Inputs Layout */
+        .input-group {
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        /* မူရင်းပုံပါ စာလုံးအသေးလေးများအတိုင်း ပြုပြင်ခြင်း */
+        .input-group label {
+            display: block;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            color: #8da48f;
+        }
+
+        /* မူရင်းပုံစံအတိုင်း အမှောင်ရင့်ရောင် Input box များ */
+        .input-group input {
+            width: 100%;
+            padding: 15px 16px;
+            background: #252527; /* ပုံပါအတိုင်း Dark grey ရင့်ရောင် */
+            border: 1px solid #323235;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            color: #ffffff;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-group input:focus {
+            background: #2c2c2f;
+            border-color: #7bb844;
+            box-shadow: 0 0 10px rgba(123, 184, 68, 0.2);
+        }
+
+        /* 💡 မူရင်းပုံပါ 'Sign Up' ခလုတ်အတိုင်း အဝါစိမ်းရောင်မှိန်မှိန် Gradient */
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to bottom, #8cd343 0%, #63a329 100%);
+            border: 1px solid #579124;
+            border-radius: 10px;
+            color: #ffffff; /* မူရင်း စာသားအရောင် အဖြူ */
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(to bottom, #9be54c 0%, #6eb330 100%);
+            transform: translateY(-1px);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        /* အောက်ခြေစာသား အရောင်ပြောင်းလဲခြင်း */
+        .signup-text {
+            margin-top: 30px;
+            font-size: 0.95rem;
+            color: #637766;
+        }
+
+        /* Login Here Link */
+        .signup-text a {
+            color: #79bf43;
+            text-decoration: none;
+            font-weight: normal;
+            transition: color 0.2s ease;
+        }
+
+        .signup-text a:hover {
+            color: #8ce34b;
+            text-decoration: underline;
+        }
+
+        /* Chrome Autofill Background Color Fix */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0px 1000px #252527 inset !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+    </style>
+</head>
+<body>
+    <div class="res">
+        <section class="login-section">
+            <div class="login-card">
+                
+                <div class="logo-area">
+                    <img src="/images/logo.png" onerror="this.src='https://i.imgur.com/v8b27fP.png'" alt="YeSyn Logo">
+                    <h1>YeSyn</h1>
+                </div>
+                
+                <h3 class="welcome-title">Welcome to YeSyn</h3>
+                <h3 class="subtitle">Create your account</h3>
+                
+                <form action="/auth/register" method="POST">
+                    
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="initial_balance">Initial Balance (Ks)</label>
+                        <input type="number" id="initial_balance" name="initial_balance" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">Sign Up</button>
+                    
+                    <p class="signup-text">Already have an account? <a href="/">Login here</a></p>
+                </form>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

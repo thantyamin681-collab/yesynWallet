@@ -1,0 +1,576 @@
+/* 1. Reset & Base */
+/* Ensure consistent box model so padding/borders don't cause overflow */
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(circle at top left, #447c37 0%, #050a04 100%);
+    color: white;
+}
+
+/* 2. Navigation (adjust padding for navigation )*/
+.navbar-wrapper { padding: 35px 1.5rem 0rem 0rem; 
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #bfff00;
+    border-radius: 50px;
+    padding: 15px 20px; /* more vertical breathing room */
+    min-height: 64px;
+    backdrop-filter: blur(10px);
+}
+
+
+
+/* for logo */
+ .logo {
+    display: flex;
+    align-items: center; /* This keeps the icon and text aligned */
+    gap: 8px;           /* Adds a tiny gap between the icon and the word YeSyn */
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    justify-content: center;
+}
+
+.logo-img {
+    width: 37px;   /* Adjust this to make it tinier or larger */
+    height: 37px;
+   object-fit: contain;   /*Keeps the logo from stretching */
+}
+
+/* Nav Links & Buttons */
+.nav-links { display: flex; list-style: none; gap: 2.5rem; }
+.nav-links a { color: #fff; text-decoration: none; font-weight: 500; transition: 0.3s; }
+.nav-links a:hover, .nav-links a.active { color: #bfff00; }
+
+.nav-right {  display:flex;align-items:center; gap: 1rem; }
+
+/* Search Bar */
+.search-container { position: relative; display: flex; align-items: center; }
+.search-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(187, 255, 0, 0.3);
+    border-radius: 20px;
+    padding: 10px 35px 10px 15px;
+    color: white;
+    outline: none;
+    width: 140px;
+    max-width: 240px;
+    transition: 0.3s;
+}
+.search-input:focus { width: 180px; border-color: #bfff00; }
+.search-icon { position: absolute; right: 12px; cursor: pointer; color: #bfff00; }
+
+/* 3. Dashboard Content */
+.content { padding: 3rem 5%; }
+.card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 2rem;
+    border-radius: 15px;
+}
+
+
+
+/* Hover effect */
+.avatar:hover {
+    transform: scale(1.1);
+    border-color: #bfff00;
+}
+
+/* 4. Mobile Responsiveness */
+.hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+.hamburger span { width: 25px; height: 3px; background: #bfff00; }
+
+@media (max-width: 900px) {
+    .hamburger { display: flex; }
+    
+    .nav-links, .nav-right { display: none; }
+
+    .nav-links.active {
+        display: flex !important;
+        position: absolute;
+        top: 90px;
+        left: 5%;
+        right: 5%;
+        width: 90%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(187, 255, 0, 0.3);
+        border-radius: 20px;
+        padding: 25px 0;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        z-index: 999;
+    }
+
+    .search-container { display: none !important; }
+    /* Style the profile when it's inside the mobile menu */
+    .nav-links.active .user-profile {
+        display: flex;
+        margin-left: 0; /* Reset auto margin for center alignment */
+        margin-top: 10px;
+    }
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Spacing between bell and avatar */
+    margin-left: auto; /* Pushes the profile section to the right */
+}
+
+
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #3498db; /* Blue color for the badge */
+    color: white;
+    font-size: 0.7rem;
+    border-radius: 50%;
+    padding: 2px 6px;
+}
+
+.profile-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover;
+    border: 2px solid #444; /* Dark border to match dashboard */
+    cursor: pointer; 
+}
+.avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.dashboard-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Splits screen into 2 equal halves */
+    gap: 30px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.left-side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chart-stats-box {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.stats-grid {
+    display: flex;
+    gap: 40px;
+}
+
+/* Ensure the terminal card looks clean */
+.terminal-card {
+    background: rgba(255, 255, 255, 0.05); /* Subtle dark background */
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #444;
+}
+
+
+
+
+/* Ensure your main content has a transparent background *
+.navbar, .dashboard-content {
+  background: transparent !important;
+} 
+ /* In your CSS file (e.g., home.css) */
+  /* body {
+  
+    background-image: url('e.png');
+
+   
+    background-size: cover;
+
+   
+    background-position: center;
+
+    
+    background-repeat: no-repeat;
+
+   
+    background-attachment: fixed;
+  
+}   */
+
+.expense-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    color: white;
+    padding: 0 1rem 1rem 1rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+}
+.total-display {
+    font-size: 1.5rem;
+    margin: 2rem 0;
+    text-align: center;
+}
+.total-display p {
+    display: block;
+    font-weight: bold;
+    margin: 0 0 0.5rem 0;
+}
+
+.total-display h2 {
+    font-size: 3rem;
+    color: #7fe8f4; /* Matching your theme's highlight color */
+    margin: 0;
+}
+
+.expense-form {
+    border: 2px solid #bfff00;
+    padding: 2rem;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 90%;
+    max-width: 450px; /* fluid layout to avoid horizontal overflow */
+    margin: 1rem auto;
+}
+
+input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background: #2a2a2a;
+    color: white;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between; 
+    gap: 10px;
+    margin-top: 10px;
+
+}
+
+
+
+button {
+    padding: 5px 15px;
+    cursor: pointer;
+}
+/* Flicker Animation */
+@keyframes neon-flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px currentColor;
+        opacity: 1;
+    }
+    20%, 22%, 24%, 55% {
+        box-shadow: none;
+        opacity: 0.6;
+    }
+}
+
+/* Apply to your buttons */
+.btn-inflow, .btn-outflow {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1;
+    transition: 0.3s;
+    /* Add the animation */
+    /* animation: neon-flicker 2s infinite alternate; */
+}
+
+.btn-inflow { 
+    background-color: #4CAF50; 
+    color: white; 
+    /* Use the button color as the shadow color */
+}
+
+.btn-outflow { 
+    background-color: #f44336; 
+    color: white; 
+}
+
+/* Optional: Stop flicker on hover for better UX */
+.btn-inflow:hover, .btn-outflow:hover {
+    animation: none;
+    box-shadow: 0 0 20px currentColor;
+    opacity: 1;
+}
+
+.dashboard-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 20px 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dashboard-grid {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 20px 1rem;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.expense-container {
+    padding: 0 1rem 1rem;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.expense-form {
+    max-width: 450px;
+    width: 90%;
+}
+
+@media (max-width: 950px) {
+    .navbar {
+        padding: 15px 18px;
+    }
+
+    .nav-links {
+        gap: 1rem;
+    }
+
+    .dashboard-grid {
+        flex-direction: column;
+        align-items: center;
+        gap: 22px;
+        padding: 18px 1rem;
+    }
+
+    .dashboard-content {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-wrapper {
+        padding: 20px 1rem 0 1rem;
+    }
+
+    .navbar {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .nav-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .search-container {
+        order: 1;
+        width: 100%;
+        justify-content: center;
+        display: flex;
+    }
+
+    .search-input {
+        width: 100%;
+        max-width: 220px;
+    }
+
+    .expense-form {
+        padding: 1.5rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-inflow,
+    .btn-outflow {
+        width: 100%;
+    }
+
+    .total-display {
+        font-size: 1.3rem;
+    }
+
+    .total-display h2 {
+        font-size: 2.5rem;
+    }
+
+    .footer {
+        padding: 40px 5%;
+    }
+
+    .footer-container {
+        gap: 30px;
+    }
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        padding: 14px 16px;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+    }
+
+    .logo-img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .search-input {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .nav-right {
+        justify-content: space-between;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .expense-form {
+        padding: 1.2rem;
+    }
+
+    .dashboard-grid {
+        gap: 18px;
+    }
+
+    .total-display h2 {
+        font-size: 2rem;
+    }
+
+    .footer-column {
+        width: 100%;
+    }
+
+    .social-icons {
+        flex-wrap: wrap;
+    }
+}
+
+/* contact */
+.footer {
+    background-color: #739e6a3e;
+    color: white;
+    padding: 60px 5%;
+ 
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.footer-column h3 {
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+/* Red accent underline */
+.footer-column h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 30px;
+    height: 2px;
+    background: #ff4d4d;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li { margin-bottom: 10px; }
+.footer-column ul li a { color: #ccc; text-decoration: none; transition: 0.3s; }
+
+
+
+.social-icons { display: flex; gap: 15px; }
+.social-icons img { width: 30px; height: 30px; border-radius: 50%; }
+
+/* Responsive Stack */
+@media (max-width: 768px) {
+    .footer-container { flex-direction: column; align-items: flex-start; }
+}
+
+
+/* Profile Image Link Wrapper */
+.user-profile-link {
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* Hover လုပ်လျှင် ပုံရိပ်အနည်းငယ် ကြွလာပြီး လင်းလာစေရန် */
+.user-profile:hover .avatar {
+    transform: scale(1.1);
+    border: 2px solid #bfff00;
+    box-shadow: 0 0 10px rgba(191, 255, 0, 0.5);
+}
+
+.avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid transparent;
+    transition: all 0.3s ease; /* ပုံရိပ်ပြောင်းလဲမှု ညင်သာစေရန် */
+}

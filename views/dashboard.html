@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YeSyn - Wallet History</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            background: #3B6636;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        /* 💡 GLOBAL DARK MODE STYLES FOR HISTORY */
+        body.dark-mode {
+            background: #121212 !important;
+            color: #ffffff !important;
+        }
+        body.dark-mode .title-box {
+            background: rgba(40, 40, 40, 0.6) !important;
+            border-left: 4px solid #76ba1b;
+        }
+        body.dark-mode .table-row {
+            background: rgba(30, 30, 30, 0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .home-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #ffffff;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        
+        .home-btn:hover { transform: scale(1.05); }
+
+        .home-icon-wrapper {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid #76ba1b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #FF8A65;
+        }
+
+        .home-btn span {
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        .title-box {
+            background: rgba(18, 36, 16, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 12px 35px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            border-left: 4px solid #76ba1b;
+        }
+
+        .title-box h1 { color: #ffffff; font-size: 28px; font-weight: 600; margin: 0; }
+        .history-table-container { width: 100%; max-width: 1200px; margin-top: 10px; }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            padding: 10px 25px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .table-body { display: flex; flex-direction: column; gap: 14px; }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            background: rgba(20, 40, 20, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 18px 25px;
+            text-align: center;
+            align-items: center;
+            color: #ffffff;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .table-row:hover { transform: translateY(-2px); background: rgba(20, 40, 20, 0.6); }
+        .income-text { color: #81C784; font-weight: bold; }
+        .outcome-text { color: #E57373; font-weight: bold; }
+
+        @media (max-width: 768px) {
+            .table-header, .table-row { grid-template-columns: 1.2fr 1.8fr 1.2fr; font-size: 14px; padding: 14px 15px; }
+            body { padding: 20px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <a href="/dashboard" class="home-btn">
+            <div class="home-icon-wrapper">
+                <i class="fa-solid fa-house"></i>
+            </div>
+            <span data-i18n="btn-home">HOME</span>
+        </a>
+
+        <div class="title-box">
+            <h1 id="historyPageTitle" data-i18n="history-title">Wallet History</h1>
+        </div>
+    </div>
+
+    <div class="history-table-container">
+        <div class="table-header">
+            <div data-i18n="th-date">Date</div>
+            <div data-i18n="th-desc">Description</div>
+            <div data-i18n="th-amount">Amount</div>
+        </div>
+
+        <div class="table-body" id="walletHistoryRows"></div>
+    </div>
+
+    <script>
+        function formatDate(dateString) {
+            if(!dateString) return "-";
+            const date = new Date(dateString);
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `${day}.${month}.${year}`;
+        }
+
+        function formatAmount(amount) {
+            return parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 2 });
+        }
+
+        async function fetchAndRenderHistory() {
+            try {
+                const response = await fetch('/api/history');
+                const data = await response.json();
+                const tableBody = document.getElementById('walletHistoryRows');
+                
+                tableBody.innerHTML = ''; 
+
+                if (!data || data.length === 0) {
+                    const noDataText = localStorage.getItem('language') === 'mm' ? 'မည်သည့် မှတ်တမ်းမှ မရှိသေးပါ။' : 'No wallet history found.';
+                    tableBody.innerHTML = `<div class="table-row" style="grid-template-columns: 1fr; color: rgba(255,255,255,0.4);">${noDataText}</div>`;
+                    return;
+                }
+
+                data.forEach(record => {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'table-row';
+
+                    const formattedDate = formatDate(record.date);
+                    const isIncome = record.type === 'income';
+                    const amountClass = isIncome ? 'income-text' : 'outcome-text';
+                    const sign = isIncome ? '+' : '-';
+
+                    rowDiv.innerHTML = `
+                        <div>${formattedDate}</div>
+                        <div>${record.description || ''}</div>
+                        <div class="${amountClass}">${sign}${formatAmount(record.amount)}ks</div>
+                    `;
+                    tableBody.appendChild(rowDiv);
+                });
+            } catch (error) {
+                console.error('Failed to load wallet data:', error);
+                const tableBody = document.getElementById('walletHistoryRows');
+                tableBody.innerHTML = `<div class="table-row" style="grid-template-columns: 1fr; color: #E57373;">Error loading history data.</div>`;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', fetchAndRenderHistory);
+
+        // 💡 [GLOBAL SYNC] Theme and Language Sync စနစ်
+        document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+
+            const currentLang = localStorage.getItem('language') || 'en';
+            const pageTranslations = {
+                en: { 
+                    "history-title": "Wallet History", "btn-home": "HOME",
+                    "th-date": "Date", "th-desc": "Description", "th-amount": "Amount"
+                },
+                mm: { 
+                    "history-title": "ငွေလွှဲမှု မှတ်တမ်းစု", "btn-home": "ပင်မစာမျက်နှာ",
+                    "th-date": "ရက်စွဲ", "th-desc": "အကြောင်းအရာ", "th-amount": "ပမာဏငွေ"
+                }
+            };
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (pageTranslations[currentLang] && pageTranslations[currentLang][key]) {
+                    el.innerText = pageTranslations[currentLang][key];
+                }
+            });
+        });
+    </script>
+</body>
+</html>

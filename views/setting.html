@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | YeSyn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- CSS STYLES (Professional & Modern Glassmorphism) --- */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            transition: background 0.4s ease, color 0.4s ease; 
+            background: radial-gradient(circle at top left, #345e2a 0%, #0d1a0b 100%);
+            color: #f5f5f5;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 💡 🌟 PROFESSIONAL DARK MODE THEME 🌟 */
+        body.dark-mode { 
+            background: radial-gradient(circle at top right, #1a2634 0%, #0d131a 100%) !important; 
+            color: #e2e8f0 !important; 
+        }
+
+        .top-nav { 
+            display: flex; 
+            justify-content: flex-start; 
+            padding: 20px; 
+        }
+
+        .circle-btn {
+            width: 45px; 
+            height: 45px; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 18px; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            background: rgba(255, 255, 255, 0.05); 
+            cursor: pointer;
+            color: white;
+        }
+        .home-btn { text-decoration: none; }
+        
+        /* Hover Effects base on Themes */
+        .home-btn:hover .circle-btn { 
+            background: rgba(181, 249, 94, 0.2); 
+            border-color: #b1f95e; 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(177, 249, 94, 0.3);
+        }
+        body.dark-mode .home-btn:hover .circle-btn {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
+        }
+
+        /* Settings Container Dynamic Styling */
+        .settings-container {
+            max-width: 450px;
+            width: 90%;
+            margin: 40px auto;
+            padding: 35px 30px;
+            border: 1px solid rgba(181, 249, 94, 0.3);
+            border-radius: 24px;
+            background: rgba(13, 26, 11, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s ease;
+        }
+
+        /* Dark Mode Glassmorphism Container */
+        body.dark-mode .settings-container {
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            background: rgba(15, 23, 42, 0.75) !important;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(56, 189, 248, 0.03);
+        }
+
+        .settings-container h2 {
+            font-size: 26px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 30px;
+            color: #b1f95e;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+            transition: color 0.4s;
+        }
+        body.dark-mode .settings-container h2 {
+            color: #38bdf8 !important; /* Premium Blue Accent in Dark Mode */
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            transition: background 0.3s, border 0.3s;
+        }
+        .setting-item:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Custom Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 56px; height: 30px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { 
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; 
+            background-color: rgba(255, 255, 255, 0.15); 
+            transition: .4s cubic-bezier(0.4, 0, 0.2, 1); 
+            border-radius: 34px; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .slider:before { 
+            position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; 
+            background-color: #ffffff; 
+            transition: .4s cubic-bezier(0.4, 0, 0.2, 1); 
+            border-radius: 50%; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* Color Change according to Themes when Checked */
+        input:checked + .slider { background-color: #64b213; }
+        body.dark-mode input:checked + .slider { background-color: #0ea5e9; }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        /* Modern Dropdown Select */
+        #languageSelect {
+            background: rgba(0, 0, 0, 0.5); 
+            color: #ffffff; 
+            border: 1px solid rgba(181, 249, 94, 0.4);
+            padding: 10px 16px; 
+            border-radius: 12px; 
+            outline: none; 
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        body.dark-mode #languageSelect {
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+        #languageSelect:focus {
+            box-shadow: 0 0 10px rgba(181, 249, 94, 0.2);
+        }
+        body.dark-mode #languageSelect:focus {
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+        #languageSelect option { 
+            background-color: #111827; 
+            color: #ffffff; 
+        }
+    </style>
+</head>
+<body>
+
+<header class="top-nav">
+    <a href="/dashboard" class="home-btn">
+        <div class="circle-btn"><i class="fa-solid fa-house"></i></div>
+    </a>
+</header>
+
+<div class="settings-container">
+  <h2 data-i18n="title">Settings</h2>
+
+  <div class="setting-item">
+    <span data-i18n="darkMode">Dark Mode</span>
+    <label class="switch">
+      <input type="checkbox" id="themeToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="setting-item">
+    <span data-i18n="language">Language</span>
+    <select id="languageSelect">
+      <option value="en">English</option>
+      <option value="mm">Myanmar</option>
+    </select>
+  </div>
+</div>
+
+<script>
+    const themeToggle = document.getElementById('themeToggle');
+    const langSelect = document.getElementById('languageSelect');
+    const body = document.body;
+
+    const translations = {
+      en: { title: "Settings", darkMode: "Dark Mode", language: "Language" },
+      mm: { title: "ဆက်တင်များ", darkMode: "ညဘက်မုဒ် (Dark)", language: "ဘာသာစကား" }
+    };
+
+    function updateLanguage(lang) {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          el.innerText = translations[lang][key];
+        }
+      });
+    }
+
+    // [GET SYSTEM] - LocalStorage
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      if(themeToggle) themeToggle.checked = true;
+    } else {
+      body.classList.remove('dark-mode');
+      if(themeToggle) themeToggle.checked = false;
+    }
+
+    const savedLang = localStorage.getItem('language') || 'en';
+    if(langSelect) langSelect.value = savedLang;
+    updateLanguage(savedLang);
+
+    // [SET SYSTEM] - Change Events
+    if(themeToggle) {
+      themeToggle.addEventListener('change', () => {
+        if (themeToggle.checked) {
+          body.classList.add('dark-mode');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          body.classList.remove('dark-mode');
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    }
+
+    if(langSelect) {
+      langSelect.addEventListener('change', (e) => {
+        const lang = e.target.value;
+        localStorage.setItem('language', lang);
+        updateLanguage(lang);
+      });
+    }
+</script>
+</body>
+</html>

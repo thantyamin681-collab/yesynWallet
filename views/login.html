@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YeSyn - Log In</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="card-container">
+        <div class="logo-section">
+            <img src="/images/logo.png" alt="Logo">
+            <h1>YeSyn</h1>
+        </div>
+        
+        <form action="/auth/login" method="POST">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" name="username" required autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-submit">Log In</button>
+        </form>
+
+        <p class="footer-text">Don't have an account? <a href="/register">Register here</a></p>
+        <div class="copyright">© YeSyn. Developed by: YeSyn Team</div>
+    </div>
+</body>
+</html>

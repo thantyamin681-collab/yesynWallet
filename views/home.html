@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | YeSync</title>
+    <link rel="stylesheet" href="home.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        
+        body.dark-mode {
+            background: #121212 !important;
+            color: #ffffff !important;
+        }
+        body.dark-mode .navbar {
+            background: rgba(20, 20, 20, 0.9) !important;
+            border-bottom: 2px solid #76ba1b;
+        }
+        body.dark-mode .expense-form {
+            background: rgba(30, 30, 30, 0.9) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        body.dark-mode .expense-form input {
+            background: #222 !important;
+            color: #fff !important;
+            border: 1px solid #444 !important;
+        }
+        body.dark-mode .footer {
+            background: #1a1a1a !important;
+            border-top: 1px solid #333;
+        }
+
+        .search-results-section {
+            width: 100%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: none; 
+        }
+        .search-title-box {
+            background: rgba(18, 36, 16, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 12px 25px;
+            border-radius: 12px;
+            border-left: 4px solid #76ba1b;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        body.dark-mode .search-title-box {
+            background: rgba(40, 40, 40, 0.6) !important;
+        }
+        .search-title-box h3 { color: #ffffff; margin: 0; font-size: 20px; }
+        .close-search-btn {
+            background: transparent; border: none; color: #ff8a65; cursor: pointer; font-size: 18px;
+        }
+        .history-table-container { width: 100%; }
+        .table-header {
+            display: grid; grid-template-columns: 1fr 2fr 1fr; padding: 10px 25px;
+            color: rgba(255, 255, 255, 0.6); font-size: 16px; font-weight: 500; text-align: center; margin-bottom: 15px;
+        }
+        .table-body { display: flex; flex-direction: column; gap: 14px; }
+        .table-row {
+            display: grid; grid-template-columns: 1fr 2fr 1fr; background: rgba(20, 40, 20, 0.4);
+            backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px; padding: 18px 25px; text-align: center; align-items: center; color: #ffffff; font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.2s, background 0.2s;
+        }
+        body.dark-mode .table-row {
+            background: rgba(30, 30, 30, 0.6) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        .table-row:hover { transform: translateY(-2px); background: rgba(20, 40, 20, 0.6); }
+        .income-text { color: #81C784; font-weight: bold; }
+        .outcome-text { color: #E57373; font-weight: bold; }
+        
+        
+        .search-input {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid #76ba1b;
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-family: inherit;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+
+<script>
+function toggleMenu() {
+    document.querySelector('.nav-links').classList.toggle('active');
+    document.querySelector('.nav-right').classList.toggle('active');
+}
+</script>
+
+<div class="res"> 
+   <header class="navbar-wrapper">
+    <nav class="navbar">
+        <div class="logo">
+            <img src="/images/ll.png" alt="YeSyn Logo" class="logo-img" width="40" height="40">
+            <span>YeSyn</span>
+        </div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/dashboard" class="active" data-i18n="nav-home">HOME</a></li>
+            <li><a href="/history" data-i18n="nav-history">HISTORY</a></li>
+            <li><a href="/settings" data-i18n="nav-settings">SETTINGS</a></li>
+            <li><a href="/auth/logout" data-i18n="nav-logout">LOGOUT</a></li>
+            <li><a href="#footer" data-i18n="nav-contact">CONTACT</a></li>
+        </ul>
+        <div class="nav-right">
+            <div class="search-container">
+                <input type="date" class="search-input" id="searchInput">
+                <span class="search-icon" id="searchTrigger" style="cursor: pointer;">🔍</span>
+            </div>
+            
+            <a href="/profile" style="text-decoration: none;">
+                <div class="user-profile" style="cursor: pointer;">
+                    <img src="/images/avator.jpg" alt="Avatar" id="navAvatar" class="avatar" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
+                </div>
+            </a>
+        </div>
+    </nav>
+</header>
+
+<div class="search-results-section" id="searchResultsSection">
+    <div class="search-title-box">
+        <h3 id="searchResultTitle">Search Results</h3>
+        <button class="close-search-btn" id="closeSearchBtn"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="history-table-container">
+        <div class="table-header">
+            <div data-i18n="th-date">Date</div>
+            <div data-i18n="th-desc">Description</div>
+            <div data-i18n="th-amount">Amount</div>
+        </div>
+        <div class="table-body" id="searchResultsRows">
+            </div>
+    </div>
+</div>
+
+<div class="expense-container">
+    <div class="total-display">
+        <p><span data-i18n="dear">Dear</span> <span id="userGreeting" style="font-weight:bold; color:#bfff00;">User</span>,<br> <span data-i18n="balance-text">your Total balance is:</span></p>
+        <h2 id="totalBalanceDisplay">0.00ks</h2>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <form class="expense-form" id="transactionForm">
+        <h3 data-i18n="form-title">Your expense</h3>
+        <label for="desc" data-i18n="label-desc">Description:</label>
+        <input type="text" id="desc" name="description" placeholder="Description..." required>
+        
+        <label for="amount" data-i18n="label-amount">Amount:</label>
+        <input type="number" id="amount" name="amount" step="0.01" placeholder="0.00" required>
+        
+        <div class="form-actions">
+            <button type="button" data-type="income" class="btn-inflow" style="cursor:pointer;" data-i18n="btn-inflow">Inflow</button>
+            <button type="button" data-type="outcome" class="btn-outflow" style="cursor:pointer;" data-i18n="btn-outflow">Outflow</button>
+        </div>
+    </form>
+</div>
+
+<footer class="footer" id="footer">
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3 data-i18n="footer-company">Company</h3>
+            <ul>
+                <li><span data-i18n="footer-about">About Us:</span><br><br> Team leader: @Leon_Cole<br>designer @ Benz <br>Developers: @XY_dev <br>Data Analyst: @jae<br></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3 data-i18n="footer-help">Help</h3>
+            <ul>
+                <li><a href="#" data-i18n="footer-contact-us">Contact Us :<br><br>support@TeamYeSyn.com</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3 data-i18n="footer-follow">Follow Us</h3>
+            <div class="social-icons">
+                <a href="#"><img src="/images/in.jpg" alt="IG"></a>
+                <a href="#"><img src="/images/face.jpg" alt="FB"></a>
+                <a href="#"><img src="/images/twit.jpg" alt="TW"></a>
+                <a href="#"><img src="/images/link.jpg" alt="LI"></a>
+                <a href="#"><img src="/images/tt.jpg" alt="LI"></a>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+
+<script>
+async function updateDashboardData() {
+    try {
+        const response = await fetch('/api/balance');
+        const data = await response.json();
+        if(data.username) {
+            document.getElementById('userGreeting').innerText = data.username;
+        }
+        if(data.balance !== undefined) {
+            const formattedBalance = parseFloat(data.balance).toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById('totalBalanceDisplay').innerText = `${formattedBalance}ks`;
+        }
+        const profileResponse = await fetch('/api/profile-data');
+        const user = await profileResponse.json();
+        if(user.id) {
+            const navAvatarImg = document.getElementById('navAvatar');
+            if (navAvatarImg) {
+                navAvatarImg.src = `/images/avatar-${user.id}.jpg?t=` + new Date().getTime();
+                navAvatarImg.onerror = function() {
+                    this.src = '/images/avator.jpg';
+                };
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+    }
+}
+
+
+async function performDateSearch() {
+    const dateInput = document.getElementById('searchInput').value;
+    if(!dateInput) {
+        alert(localStorage.getItem('language') === 'mm' ? 'ကျေးဇူးပြု၍ ရက်စွဲတစ်ခု ရွေးချယ်ပေးပါ!' : 'Please select a date!');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/search-history?date=${dateInput}`);
+        const results = await response.json();
+        
+        const resultsSection = document.getElementById('searchResultsSection');
+        const tableBody = document.getElementById('searchResultsRows');
+        const titleEl = document.getElementById('searchResultTitle');
+        const currentLang = localStorage.getItem('language') || 'en';
+        
+        titleEl.innerText = currentLang === 'mm' ? `${dateInput} ၏ မှတ်တမ်းစု ရှာဖွေမှုရလဒ်` : `Search Results for ${dateInput}`;
+        tableBody.innerHTML = '';
+        resultsSection.style.display = 'block';
+        
+        
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+        if(results.length === 0) {
+            tableBody.innerHTML = `<div class="table-row" style="grid-template-columns: 1fr; color: #ff8a65;">${currentLang === 'mm' ? 'ဤရက်စွဲတွင် မည်သည့်ငွေလွှဲမှုမှတ်တမ်းမျှ မရှိပါမကော။' : 'No transactions found for this date.'}</div>`;
+            return;
+        }
+
+        results.forEach(item => {
+            const rawDate = new Date(item.date);
+            const formattedDate = rawDate.toLocaleDateString('en-GB'); // DD/MM/YYYY ပုံစံဖြင့်ပြသမည်
+
+            const isIncome = item.type === 'income';
+            const amountClass = isIncome ? 'income-text' : 'outcome-text';
+            const prefix = isIncome ? '+' : '-';
+            const amountFormatted = `${prefix}${parseFloat(item.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}ks`;
+
+            const row = document.createElement('div');
+            row.className = 'table-row';
+            row.innerHTML = `
+                <div>${formattedDate}</div>
+                <div>${item.description}</div>
+                <div class="${amountClass}">${amountFormatted}</div>
+            `;
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error matching search:', error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Theme setup
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+
+    // Language Handling
+    const currentLang = localStorage.getItem('language') || 'en';
+    const homeTranslations = {
+        en: { 
+            "nav-home": "HOME", "nav-history": "HISTORY", "nav-settings": "SETTINGS", 
+            "nav-logout": "LOGOUT", "nav-contact": "CONTACT", "balance-title": "Total Balance",
+            "dear": "Dear", "balance-text": "your Total balance is:", "form-title": "Your expense",
+            "label-desc": "Description:", "label-amount": "Amount:", "btn-inflow": "Inflow",
+            "btn-outflow": "Outflow", "footer-company": "Company", "footer-about": "About Us:",
+            "footer-help": "Help", "footer-contact-us": "Contact Us : support@TeamYeSyn.com", "footer-follow": "Follow Us",
+            "th-date": "Date", "th-desc": "Description", "th-amount": "Amount"
+        },
+        mm: { 
+            "nav-home": "ပင်မစာမျက်နှာ", "nav-history": "မှတ်တမ်းစု", "nav-settings": "ဆက်တင်များ", 
+            "nav-logout": "ထွက်ရန်", "nav-contact": "ဆက်သွယ်ရန်", "balance-title": "စုစုပေါင်း လက်ကျန်ငွေ",
+            "dear": "မင်္ဂလာပါ", "balance-text": "သင့်ရဲ့ စုစုပေါင်း လက်ကျန်ငွေမှာ-", "form-title": "သင်၏ အသုံးစရိတ်စာရင်း",
+            "label-desc": "အကြောင်းအရာ:", "label-amount": "ပမာဏငွေ:", "btn-inflow": "ဝင်ငွေ",
+            "btn-outflow": "ထွက်ငွေ", "footer-company": "ကုမ္ပဏီ", "footer-about": "ကျွန်ုပ်တို့အကြောင်း-",
+            "footer-help": "အကူအညီ", "footer-contact-us": "ဆက်သွယ်ရန် : support@TeamYeSyn.com", "footer-follow": "လူမှုကွန်ရက်",
+            "th-date": "ရက်စွဲ", "th-desc": "အကြောင်းအရာ", "th-amount": "ပမာဏငွေ"
+        }
+    };
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (homeTranslations[currentLang] && homeTranslations[currentLang][key]) {
+            el.innerText = homeTranslations[currentLang][key];
+        }
+    });
+
+    updateDashboardData();
+
+    // 🔍 Search Event Listeners
+    document.getElementById('searchTrigger').addEventListener('click', performDateSearch);
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') performDateSearch();
+    });
+    document.getElementById('closeSearchBtn').addEventListener('click', () => {
+        document.getElementById('searchResultsSection').style.display = 'none';
+    });
+
+    // Handle form submissions
+    const actionButtons = document.querySelectorAll('.form-actions button');
+    actionButtons.forEach(button => {
+        button.addEventListener('click', async (e) => {
+            const type = e.target.getAttribute('data-type');
+            const description = document.getElementById('desc').value;
+            const amount = document.getElementById('amount').value;
+
+            if(!description || !amount) {
+                alert(currentLang === 'mm' ? 'အချက်အလက်များ ပြည့်စုံစွာ ဖြည့်စွက်ပါ!' : 'Please fill all fields');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/transaction', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ description, amount, type })
+                });
+                const data = await res.json();
+                if(res.ok) {
+                    alert(currentLang === 'mm' ? 'စာရင်းသွင်းခြင်း အောင်မြင်ပါသည်!' : 'Transaction Added Successfully!');
+                    document.getElementById('transactionForm').reset();
+                    updateDashboardData();
+                    // ရှာဖွေမှုဖွင့်ထားလျှင် ရလဒ်ကိုပါ ချက်ချင်း Update လုပ်ပေးမည်
+                    if(document.getElementById('searchResultsSection').style.display === 'block') {
+                        performDateSearch();
+                    }
+                } else {
+                    alert(data.message || 'Error occurred');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>

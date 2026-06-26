@@ -1,0 +1,143 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: radial-gradient(circle, #2d5a27 0%, #122410 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Glassmorphic Container */
+.card-container {
+    background: rgba(18, 36, 16, 0.75);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    position: relative;
+}
+
+/* Glowing Accent Line */
+.card-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%; height: 2px;
+    background: linear-gradient(90deg, transparent, #5cb85c, #00d2ff, transparent);
+}
+
+.logo-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.logo-section img {
+    width: 45px;
+    height: 45px;
+}
+
+.logo-section h1 {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.welcome-text {
+    color: #ffffff;
+    margin-bottom: 24px;
+}
+
+.welcome-text h2 { font-size: 22px; font-weight: 500; }
+.welcome-text p { color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-top: 4px; }
+
+/* Form Elements */
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.input-group input, .input-group select, .input-group textarea {
+    width: 100%;
+    padding: 14px;
+    background: rgba(10, 20, 9, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #76ba1b;
+    box-shadow: 0 0 8px rgba(118, 186, 27, 0.4);
+}
+
+/* Buttons */
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #76ba1b 0%, #5a8f13 100%);
+    border: none;
+    border-radius: 14px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: transform 0.2s, opacity 0.2s;
+    margin-top: 10px;
+}
+
+.btn-submit:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Footer Link */
+.footer-text {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    margin-top: 24px;
+}
+
+.footer-text a {
+    color: #76ba1b;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.footer-text a:hover { text-decoration: underline; }
+
+.copyright {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 30px;
+}
+
+/* Responsive Grid for Dashboard */
+@media (max-width: 480px) {
+    .card-container { padding: 25px 20px; }
+}

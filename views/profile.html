@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | YeSyn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #4a744c; font-family: sans-serif; min-height: 100vh; transition: background 0.3s; }
+
+        /* 💡 GLOBAL DARK MODE STYLES FOR PROFILE */
+        body.dark-mode {
+            background: #121212 !important;
+            color: #ffffff !important;
+        }
+        body.dark-mode .profile-card {
+            background: #1e1e1e !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .res { width: 100%; padding: 0 15px; }
+        .back-home-container { max-width: 400px; margin: 20px auto 0 auto; text-align: left; }
+        .back-home-link { color: #ffffff; text-decoration: none; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; opacity: 0.8; }
+        .back-home-link:hover { color: #bfff00; }
+        .profile-section { padding: 40px 20px; display: flex; justify-content: center; }
+        .profile-card { background: #243627; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.3); color: white; }
+        .avatar-container { width: 124px; height: 124px; margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .large-avatar { width: 120px; height: 120px; min-width: 120px; min-height: 120px; max-width: 120px; max-height: 120px; border-radius: 50%; border: 4px solid #37503c; object-fit: cover; display: block; }
+        .upload-hint { color: #a1b5a5; font-size: 11px; margin-bottom: 25px; cursor: pointer; text-decoration: underline; }
+        .profile-details { text-align: left; }
+        .detail-item { margin: 15px 0; border-bottom: 1px solid #5a705e; padding-bottom: 8px; height: 65px; display: flex; flex-direction: column; justify-content: center; }
+        .detail-item label { font-size: 0.8rem; color: #a1b5a5; text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .edit-input { width: 100%; background: transparent; border: none; color: white; font-size: 1.1rem; padding: 4px 0; outline: none; font-family: sans-serif; display: block; }
+        .edit-input:disabled { color: #cccccc; background: transparent; cursor: not-allowed; }
+        .button-container { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
+        .edit-btn { width: 100%; padding: 12px; background: #4CAF50; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        .edit-btn:hover { background: #8bff91; color: #243627; }
+        .logout-btn { width: 100%; padding: 12px; background: #e74c3c; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="res">
+        <div class="back-home-container">
+            <a href="/dashboard" class="back-home-link">
+                <i class="fa-solid fa-arrow-left"></i> 
+                <span data-i18n="back-dash">Back to Dashboard</span>
+            </a>
+        </div>
+
+        <section class="profile-section">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <form id="avatarForm" action="/api/upload-avatar" method="POST" enctype="multipart/form-data">
+                        <div class="avatar-container">
+                            <img src="/images/avator.jpg" alt="User Profile" class="large-avatar" id="avatarPreview" style="cursor: pointer;">
+                        </div>
+                        <input type="file" name="avatar" id="fileInput" style="display: none;" accept="image/*">
+                        <div class="upload-hint" onclick="document.getElementById('fileInput').click()" data-i18n="change-photo">Change Photo</div>
+                    </form>
+                    <h2 id="profileHeaderName">Loading...</h2>
+                    <p id="memberSinceText" style="font-size: 0.9rem; color: #a1b5a5; margin-bottom: 15px;">Member since ...</p>
+                </div>
+                
+                <form id="profileDataForm" action="/api/profile-update" method="POST">
+                    <div class="profile-details">
+                        
+                        <div class="detail-item">
+                            <label data-i18n="lbl-username">User Name</label>
+                            <input type="text" id="pUsername" class="edit-input" disabled value="Loading...">
+                        </div>
+                        
+                        <div class="detail-item">
+                            <label data-i18n="lbl-password">Change Password</label>
+                            <input type="password" name="password" id="pPassword" class="edit-input" disabled placeholder="Leave blank to keep unchanged">
+                        </div>
+                        
+                        <div class="button-container">
+                            <button type="button" class="edit-btn" id="editToggleBtn" onclick="toggleEdit()" data-i18n="btn-update">Update Profile</button>
+                            <a href="/auth/logout" style="text-decoration: none; width: 100%;">
+                                <button type="button" class="logout-btn" data-i18n="btn-logout">Logout</button>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+
+<script>
+    let isEditing = false;
+
+    async function loadUserProfile() {
+        try {
+            const response = await fetch('/api/profile-data');
+            const user = await response.json();
+            
+            if (user.username) {
+                document.getElementById('profileHeaderName').innerText = `Mr. ${user.username}`;
+                document.getElementById('pUsername').value = user.username;
+                document.getElementById('pPassword').value = ''; 
+                
+                const joinDate = new Date(user.created_at);
+                const memberSinceWord = localStorage.getItem('language') === 'mm' ? 'မှစတင်၍ အဖွဲ့ဝင်ဖြစ်သည်' : 'Member since';
+                document.getElementById('memberSinceText').innerText = `${memberSinceWord} ${joinDate.getFullYear()}`;
+                
+                const avatarImg = document.getElementById('avatarPreview');
+                avatarImg.src = `/images/avatar-${user.id}.jpg?t=${new Date().getTime()}`;
+                avatarImg.onerror = function() { this.src = '/images/avator.jpg'; };
+            }
+        } catch (error) {
+            console.error('Failed to load profile data:', error);
+        }
+    }
+
+    function toggleEdit() {
+        const passwordInput = document.getElementById('pPassword');
+        const btn = document.getElementById('editToggleBtn');
+        
+        if (!isEditing) {
+            passwordInput.disabled = false;
+            passwordInput.style.borderBottom = '1px solid #bfff00';
+            passwordInput.focus();
+            
+            btn.innerText = localStorage.getItem('language') === 'mm' ? 'ပြင်ဆင်ချက်သိမ်းရန်' : 'Save Changes';
+            btn.style.background = '#bfff00';
+            btn.style.color = '#000';
+            isEditing = true;
+        } else {
+            document.getElementById('profileDataForm').submit();
+        }
+    }
+
+    document.getElementById('avatarPreview').addEventListener('click', () => document.getElementById('fileInput').click());
+    document.getElementById('fileInput').addEventListener('change', () => {
+        if(document.getElementById('fileInput').files.length > 0) document.getElementById('avatarForm').submit();
+    });
+
+    window.addEventListener('DOMContentLoaded', loadUserProfile);
+
+    // 💡 [GLOBAL SYNC] Theme and Language Sync စနစ်
+    document.addEventListener("DOMContentLoaded", () => {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+
+        const currentLang = localStorage.getItem('language') || 'en';
+        const profileTranslations = {
+            en: { 
+                "back-dash": "Back to Dashboard", "change-photo": "Change Photo",
+                "lbl-username": "User Name", "lbl-password": "Change Password",
+                "btn-update": "Update Profile", "btn-logout": "Logout"
+            },
+            mm: { 
+                "back-dash": "ပင်မစာမျက်နှာသို့ပြန်ရန်", "change-photo": "ဓာတ်ပုံပြောင်းရန်",
+                "lbl-username": "အသုံးပြုသူအမည်", "lbl-password": "စကားဝှက်အသစ်ပြောင်းရန်",
+                "btn-update": "ကိုယ်ရေးအချက်အလက်ပြင်မည်", "btn-logout": "ထွက်ရန်"
+            }
+        };
+
+        const pPassword = document.getElementById('pPassword');
+        if(pPassword) {
+            pPassword.placeholder = currentLang === 'mm' ? 'မပြောင်းလဲလိုပါက ကွက်လပ်ထားပါ' : 'Leave blank to keep unchanged';
+        }
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (profileTranslations[currentLang] && profileTranslations[currentLang][key]) {
+                el.innerText = profileTranslations[currentLang][key];
+            }
+        });
+    });
+</script>
+</body>
+</html>
