@@ -5,11 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YeSyn - Logged Out</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* 💡 DARK MODE STYLES FOR LOGOUT PAGE */
+        body.dark-mode {
+            background: #121212 !important;
+            color: #ffffff !important;
+        }
+        body.dark-mode .card-container {
+            background: rgba(30, 30, 30, 0.9) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+        }
+        body.dark-mode h1, body.dark-mode h2 {
+            color: #ffffff !important;
+        }
+        body.dark-mode .copyright {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+        body.dark-mode .btn-submit {
+            background: #007bff !important; /* Dark mode ခလုတ်ကိုပါ အပြာရောင်ပြောင်းလဲပေးထားပါသည် */
+            color: #fff !important;
+        }
+    </style>
 </head>
 <body>
     <div class="card-container">
         <div class="logo-section">
-            <img src="/images/logo.png" alt="Logo">
+            <img src="/images/logo.PNG" alt="Logo">
             <h1>YeSyn</h1>
         </div>
         
@@ -23,5 +45,16 @@
             Developed by: YeSyn Team in 2026 June.<br>All rights reserved.
         </div>
     </div>
+
+    <script>
+        /* 💡 AUTOMATIC THEME SYNC FROM LOCALSTORAGE */
+        document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        });
+    </script>
 </body>
 </html>

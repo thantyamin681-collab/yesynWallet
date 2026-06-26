@@ -23,9 +23,16 @@
             background: #121212 !important;
             color: #ffffff !important;
         }
+        /* 🎨 CHANGED TABLE HEADER BORDER & COLORS FOR DARK MODE */
         body.dark-mode .title-box {
             background: rgba(40, 40, 40, 0.6) !important;
-            border-left: 4px solid #76ba1b;
+            border-left: 4px solid #007bff !important; /* Home နှင့် ကိုက်ညီအောင် အပြာရောင်ပြောင်းပေးထားပါသည် */
+        }
+        body.dark-mode .home-icon-wrapper {
+            border: 2px solid #007bff !important;
+        }
+        body.dark-mode .table-header {
+            color: #bfff00 !important; /* Dark mode တွင် စာသားကို ရွှေဝါရောင်ဖျော့ပြောင်းလဲပေးထားပါသည် */
         }
         body.dark-mode .table-row {
             background: rgba(30, 30, 30, 0.6) !important;
@@ -208,7 +215,7 @@
 
         window.addEventListener('DOMContentLoaded', fetchAndRenderHistory);
 
-        // 💡 [GLOBAL SYNC] Theme and Language Sync စနစ်
+        
         document.addEventListener("DOMContentLoaded", () => {
             if (localStorage.getItem('theme') === 'dark') {
                 document.body.classList.add('dark-mode');

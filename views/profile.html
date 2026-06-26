@@ -99,7 +99,7 @@
             const user = await response.json();
             
             if (user.username) {
-                document.getElementById('profileHeaderName').innerText = `Mr. ${user.username}`;
+                document.getElementById('profileHeaderName').innerText = `Dear ${user.username}`;
                 document.getElementById('pUsername').value = user.username;
                 document.getElementById('pPassword').value = ''; 
                 
