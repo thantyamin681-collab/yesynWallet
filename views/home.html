@@ -86,6 +86,19 @@
             font-family: inherit;
             cursor: pointer;
         }
+        /* ပုံမှန် Desktop layout မှာ mobile profile item ကို ဖျောက်ထားမည် */
+.mobile-profile-item {
+    display: none !important;
+}
+
+/* 📱 Mobile view Layout အတွက် CSS */
+@media (max-width: 768px) {
+    .mobile-profile-item {
+        display: block !important;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        margin-bottom: 10px;
+    }
+}
     </style>
 </head>
 <body class="dashboard-body">
@@ -101,13 +114,19 @@ function toggleMenu() {
    <header class="navbar-wrapper">
     <nav class="navbar">
         <div class="logo">
-            <img src="/images/ll.png" alt="YeSyn Logo" class="logo-img" width="40" height="40">
+            <img src="/images/logo.PNG" alt="YeSyn Logo" class="logo-img" width="40" height="40">
             <span>YeSyn</span>
         </div>
         <div class="hamburger" onclick="toggleMenu()">
             <span></span><span></span><span></span>
         </div>
         <ul class="nav-links">
+            <li class="mobile-profile-item">
+                <a href="/profile" style="display: flex; align-items: center; gap: 10px; padding: 10px;">
+                    <img src="/images/avator.jpg" class="avatar mobile-avatar-nav" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
+                    <span data-i18n="nav-profile" style="font-size: 14px;">PROFILE</span>
+                </a>
+            </li>
             <li><a href="/dashboard" class="active" data-i18n="nav-home">HOME</a></li>
             <li><a href="/history" data-i18n="nav-history">HISTORY</a></li>
             <li><a href="/settings" data-i18n="nav-settings">SETTINGS</a></li>
@@ -122,7 +141,7 @@ function toggleMenu() {
             
             <a href="/profile" style="text-decoration: none;">
                 <div class="user-profile" style="cursor: pointer;">
-                    <img src="/images/avator.jpg" alt="Avatar" id="navAvatar" class="avatar" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
+                    <img src="/images/avatar.jpg" alt="Avatar" id="navAvatar" class="avatar" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
                 </div>
             </a>
         </div>
