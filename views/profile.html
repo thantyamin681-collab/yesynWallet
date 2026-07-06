@@ -5,12 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile | YeSyn</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #4a744c; font-family: sans-serif; min-height: 100vh; transition: background 0.3s; }
-
-        /* 💡 GLOBAL DARK MODE STYLES FOR PROFILE */
         body.dark-mode {
             background: #121212 !important;
             color: #ffffff !important;
@@ -20,7 +17,6 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         .res { width: 100%; padding: 0 15px; }
         .back-home-container { max-width: 400px; margin: 20px auto 0 auto; text-align: left; }
         .back-home-link { color: #ffffff; text-decoration: none; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; opacity: 0.8; }
@@ -65,12 +61,13 @@
                     <p id="memberSinceText" style="font-size: 0.9rem; color: #a1b5a5; margin-bottom: 15px;">Member since ...</p>
                 </div>
                 
+                <!-- Form တစ်ခုတည်းမှ ဒေတာပို့ခြင်းစနစ် -->
                 <form id="profileDataForm" action="/api/profile-update" method="POST">
                     <div class="profile-details">
-                        
                         <div class="detail-item">
                             <label data-i18n="lbl-username">User Name</label>
-                            <input type="text" id="pUsername" class="edit-input" disabled value="Loading...">
+                            <!-- 🌟 ချိန်ညှိချက်: Backend သို့ အလုပ်လုပ်စေရန် name="username" တိကျစွာ ထည့်ထားသည် -->
+                            <input type="text" id="pUsername" name="username" class="edit-input" disabled value="Loading..." required>
                         </div>
                         
                         <div class="detail-item">
@@ -117,19 +114,25 @@
     }
 
     function toggleEdit() {
+        const usernameInput = document.getElementById('pUsername');
         const passwordInput = document.getElementById('pPassword');
         const btn = document.getElementById('editToggleBtn');
         
         if (!isEditing) {
+            usernameInput.disabled = false;
+            usernameInput.style.borderBottom = '1px solid #bfff00';
+            
             passwordInput.disabled = false;
             passwordInput.style.borderBottom = '1px solid #bfff00';
-            passwordInput.focus();
+            
+            usernameInput.focus();
             
             btn.innerText = localStorage.getItem('language') === 'mm' ? 'ပြင်ဆင်ချက်သိမ်းရန်' : 'Save Changes';
             btn.style.background = '#bfff00';
             btn.style.color = '#000';
             isEditing = true;
         } else {
+            // Save နှိပ်လိုက်လျှင် Form ကို Submit လုပ်မည်ဖြစ်သည်
             document.getElementById('profileDataForm').submit();
         }
     }
@@ -141,7 +144,6 @@
 
     window.addEventListener('DOMContentLoaded', loadUserProfile);
 
-    // 💡 [GLOBAL SYNC] Theme and Language Sync စနစ်
     document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-mode');
